@@ -10,6 +10,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: 'cargo build --release'
+
 - task: Bash@3
   displayName: Copy Bin and Check Files
   inputs:
@@ -17,4 +18,10 @@ steps:
     script: |
       cp target/release/increment_version ./increment_version
 
-      ls -la
+- task: Bash@3
+  displayName: Run Tests
+  inputs:
+    targetType: 'inline'
+    workingDirectory: $(System.DefaultWorkingDirectory)/tests
+    script: |
+      ./run_tests.sh

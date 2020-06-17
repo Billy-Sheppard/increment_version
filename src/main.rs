@@ -103,7 +103,7 @@ fn check_for_update(current_version: &str, debug: bool) -> Result<()> {
 
 fn main() -> Result<()> {
     let current_version = env!("CARGO_PKG_VERSION");
-    println!("{}{}{}", "-- Increment Cargo.toml Version: v".cyan(), current_version.cyan(), " --".cyan());
+    println!("{}{}{}", "-- Increment Version: v".cyan(), current_version.cyan(), " --".cyan());
 
     env_logger::init();
     let flags = Opt::from_args();
