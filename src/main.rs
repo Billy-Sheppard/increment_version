@@ -118,7 +118,7 @@ fn main() -> Result<()> {
 
         run_cmd(&["git", "commit", "-m", &format!("\"v{}\"", new_toml.1)], Color::Blue, flags.debug);
 
-        run_cmd(&["git", "tag", &format!("\"v{}\"", new_toml.1)], Color::Blue, flags.debug);
+        run_cmd(&["git", "tag", &format!("v{}", new_toml.1)], Color::Blue, flags.debug);
 
         run_cmd(&["git", "push"], Color::Blue, flags.debug);
 
