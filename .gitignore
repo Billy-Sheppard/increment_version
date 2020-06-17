@@ -1,3 +1,4 @@
 target
 increment_version
 copy_bin.sh
+create_release.sh

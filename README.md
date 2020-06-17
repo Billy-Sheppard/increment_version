@@ -1,6 +1,10 @@
 # Increment Version
-A Rust Utility for updating Cargo.toml or Version.toml files
+A Rust Utility for updating Cargo.toml or Version.toml files (Linux)
 
+## Download
+Recommend Install Location: '/usr/local/bin/increment_version'
+
+https://github.com/billy-sheppard/increment_version/releases/latest/download/increment_versio
 
 ## Usage
 
@@ -20,3 +24,7 @@ A Rust Utility for updating Cargo.toml or Version.toml files
     -a: For using a Version.toml file instead of Cargo.toml
     
     -t: For automatically tagging with the format v{version}, committing, and pushing to git remote
+
+    --no-update: Skips checking for an updated version
+
+    -d: Returns some extra output
