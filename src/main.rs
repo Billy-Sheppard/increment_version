@@ -50,7 +50,7 @@ enum Bump {
     Custom(Version)
 }
 
-fn check_for_update(_current_version: &str, debug: bool) -> Result<()> {
+fn check_for_update(current_version: &str, debug: bool) -> Result<()> {
     let resp = process::Command::new("curl")
         .arg("-s")
         .arg("https://api.github.com/repos/billy-sheppard/increment_version/releases/latest")
@@ -59,7 +59,7 @@ fn check_for_update(_current_version: &str, debug: bool) -> Result<()> {
 
     let response: serde_json::Value = serde_json::from_str(&String::from_utf8_lossy(&resp.stdout))?;
     
-    // let current_version = Version::from_str(current_version)?;
+    let current_version = Version::from_str(current_version)?;
     let most_recent_version = Version::from_str(response["tag_name"].as_str().unwrap())?;
     
     let current_dir = std::env::current_dir()?;
@@ -68,31 +68,37 @@ fn check_for_update(_current_version: &str, debug: bool) -> Result<()> {
     let exe_path = exe_dir.to_str().unwrap();
 
     let mut input = String::new();
-    println!("{} There is a newer version of Increment Version available (v{})", "[INFO]".cyan(), most_recent_version.to_string());
-    println!("{} Would you like to download it? (y/n)", "[INFO]".cyan());
 
-    let _ = stdout().flush();
-    stdin().read_line(&mut input)?;
-
-    input = input.replace("\n", "");
-
-    if input == "y" || input == "yes" {
-        println!("{} This will download to your current directory.", "[INFO]".cyan());
-        debug!("{} Current Dir: {}", "[DEBUG]".purple(), current_path);
-        println!("{} Updating...", "[INFO]".cyan());
-        run_cmd(&["curl", "-L", "-o", &format!("{}/increment_version", current_path), "https://github.com/billy-sheppard/increment_version/releases/latest/download/increment_version"], Color::Cyan, debug);
-        println!("{} To overwrite your binary run the following command:", "[INFO]".cyan());
-        println!("      {} {}/increment_version {}", "sudo cp", current_path, exe_path);
-        process::exit(0);
-    }
-    else if input == "n" || input == "no" {
-        println!("{} Skipping, not updating.", "[INFO]".cyan());
+    if current_version == most_recent_version {
+        Ok(())
     }
     else {
-        println!("{} Invalid input passed, not updating.", "[INFO]".cyan());
-    }
+            
+        println!("{} There is a newer version of Increment Version available (v{})", "[INFO]".cyan(), most_recent_version.to_string());
+        println!("{} Would you like to download it? (y/n)", "[INFO]".cyan());
 
-    Ok(())
+        let _ = stdout().flush();
+        stdin().read_line(&mut input)?;
+
+        input = input.replace("\n", "");
+
+        if input == "y" || input == "yes" {
+            println!("{} This will download to your current directory.", "[INFO]".cyan());
+            debug!("{} Current Dir: {}", "[DEBUG]".purple(), current_path);
+            println!("{} Updating...", "[INFO]".cyan());
+            run_cmd(&["curl", "-L", "-o", &format!("{}/increment_version", current_path), "https://github.com/billy-sheppard/increment_version/releases/latest/download/increment_version"], Color::Cyan, debug);
+            println!("{} To overwrite your binary run the following command:", "[INFO]".cyan());
+            println!("       {} {}/increment_version {}", "sudo cp", current_path, exe_path);
+            process::exit(0);
+        }
+        else if input == "n" || input == "no" {
+            println!("{} Skipping, not updating.", "[INFO]".cyan());
+        }
+        else {
+            println!("{} Invalid input passed, not updating.", "[INFO]".cyan());
+        }
+        Ok(())
+    }
 }
 
 fn main() -> Result<()> {
@@ -238,7 +244,7 @@ fn update_toml(file_path: &str, bump: Bump) -> Result<(String, String)> {
     Ok((new_toml.join("\n"), new_ver))
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 struct Version {
     major: i64,
     minor: i64,
