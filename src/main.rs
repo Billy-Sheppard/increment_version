@@ -116,7 +116,7 @@ fn main() -> Result<()> {
             run_cmd(&["git", "add", &format!("{}Cargo.lock", sub_folder)], Color::Blue, flags.debug);
         };
 
-        run_cmd(&["git", "commit", "-m", &format!("\"v{}\"", new_toml.1)], Color::Blue, flags.debug);
+        run_cmd(&["git", "commit", "-m", &format!("v{}", new_toml.1)], Color::Blue, flags.debug);
 
         run_cmd(&["git", "tag", &format!("v{}", new_toml.1)], Color::Blue, flags.debug);
 
