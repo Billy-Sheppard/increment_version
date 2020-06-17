@@ -7,7 +7,7 @@ A Rust Utility for updating Cargo.toml or Version.toml files (Linux)
 ## Download
 Recommend Install Location: '/usr/local/bin/increment_version'
 
-https://github.com/billy-sheppard/increment_version/releases/latest/download/increment_versio
+https://github.com/billy-sheppard/increment_version/releases/latest/download/increment_version
 
 ## Usage
 
