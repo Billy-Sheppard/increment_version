@@ -5,10 +5,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+- task: Bash@3
+  displayName: Build Increment Version
+  inputs:
+    targetType: 'inline'
+    script: 'cargo build --release'
+- task: Bash@3
+  displayName: Copy Bin and Check Files
+  inputs:
+    targetType: 'inline'
+    script: |
+      cp target/release/increment_version ./increment_version
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+      ls -la
