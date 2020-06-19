@@ -13,7 +13,7 @@ else
 fi
 ../increment_version -d --no-update -n > /dev/null
 echo "Minor Updating Cargo.toml"
-if ! cat ./Cargo.toml | grep -q '0.1.2'; then
+if ! cat ./Cargo.toml | grep -q '0.1.0'; then
     echo "  Failed"
     exit 1
 else
@@ -21,7 +21,7 @@ else
 fi
 ../increment_version -d --no-update -m > /dev/null
 echo "Major Updating Cargo.toml"
-if ! cat ./Cargo.toml | grep -q '1.1.2'; then
+if ! cat ./Cargo.toml | grep -q '1.0.0'; then
     echo "  Failed"
     exit 1
 else
@@ -46,7 +46,7 @@ else
 fi
 ../increment_version -d --no-update -n -a > /dev/null
 echo "Minor Updating Version.toml"
-if ! cat ./Version.toml | grep -q '0.1.2'; then
+if ! cat ./Version.toml | grep -q '0.1.0'; then
     echo "  Failed"
     exit 1
 else
@@ -54,7 +54,7 @@ else
 fi
 ../increment_version -d --no-update -m -a > /dev/null
 echo "Major Updating Version.toml"
-if ! cat ./Version.toml | grep -q '1.1.2'; then
+if ! cat ./Version.toml | grep -q '1.0.0'; then
     echo "  Failed"
     exit 1
 else
