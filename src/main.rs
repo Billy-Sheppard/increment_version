@@ -294,21 +294,21 @@ fn bump_version(bump: Bump, toml: Value) -> Result<String> {
                 old_version.major += 1;
                 old_version.minor = 0;
                 old_version.patch = 0;
-                old_version.prerelease = Some("".into());
-                old_version.build_metadata = Some("".into());
+                old_version.prerelease = None;
+                old_version.build_metadata = None;
                 old_version
             },
             Bump::Minor => {
                 old_version.minor += 1;
                 old_version.patch = 0;
-                old_version.prerelease = Some("".into());
-                old_version.build_metadata = Some("".into());
+                old_version.prerelease = None;
+                old_version.build_metadata = None;
                 old_version
             },
             Bump::Patch => {
                 old_version.patch += 1;
-                old_version.prerelease = Some("".into());
-                old_version.build_metadata = Some("".into());
+                old_version.prerelease = None;
+                old_version.build_metadata = None;
                 old_version
             },
             Bump::Custom(ver) => {
