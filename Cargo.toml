@@ -1,6 +1,6 @@
 [package]
 name = "increment_version"
-version = "0.3.4"
+version = "0.3.5"
 authors = ["Billy Sheppard <billysheppard@rmhedge.com>"]
 edition = "2018"
 
