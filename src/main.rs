@@ -231,14 +231,17 @@ fn update_toml(file_path: &str, bump: Bump) -> Result<(String, String)> {
     let toml: Value = toml::from_str(&toml_file)?;
     let new_ver = bump_version(bump, toml.clone())?;
     let toml_file_lines: Vec<&str> = toml_file.lines().into_iter().collect();
-    let new_toml: Vec<String> = toml_file_lines.into_iter().map(|l| {
-        if l.starts_with("version") {
-            format!("version = \"{}\"", new_ver)
-        }   
-        else {
-            l.into()
-        }
-    }).collect();
+    let mut c = false;
+    let mut new_toml: Vec<String> =  Vec::new();
+        for l in toml_file_lines.into_iter() {
+            if l.starts_with("version") && !c {
+                new_toml.push(format!("version = \"{}\"", new_ver));
+                c = true;
+            }   
+            else {
+                new_toml.push(l.into());
+            }
+    };
     println!("{} Updated {} from {} to {}.", "[INFO]".green(), file_path, toml["package"]["version"].as_str().unwrap().replace("\"", ""), new_ver);
 
     Ok((new_toml.join("\n"), new_ver))
