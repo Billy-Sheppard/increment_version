@@ -25,8 +25,8 @@ struct Opt {
     #[structopt(short = "sf", long = "sub-folder")]
     sub_folder: Option<String>,
     /// Set Version to
-    #[structopt(short = "v", long = "version")]
-    version: Option<String>,
+    #[structopt(short = "v", long = "set-version")]
+    set_version: Option<String>,
     /// Look for Version.toml instead of Cargo.toml
     #[structopt(short = "a", long = "version-toml")]
     version_toml: bool,
@@ -94,7 +94,7 @@ fn check_for_update(current_version: &str, debug: bool) -> Result<()> {
                 "[INFO]".green()
             );
             println!(
-                "       sudo cp {}/increment_version {}",
+                "       sudo mv {}/increment_version {} && increment_version --version",
                 current_path, exe_path
             );
             process::exit(0);
@@ -128,7 +128,7 @@ fn main() -> Result<()> {
         flags.major,
         flags.minor,
         flags.patch,
-        flags.version.is_some(),
+        flags.set_version.is_some(),
     ];
     let version_flags: Vec<&bool> = version_flags.iter().filter(|f| f == &&true).collect();
 
@@ -151,8 +151,8 @@ fn main() -> Result<()> {
         Bump::Minor
     } else if flags.patch {
         Bump::Patch
-    } else if flags.version.is_some() {
-        let validated_version = flags.version.unwrap();
+    } else if flags.set_version.is_some() {
+        let validated_version = flags.set_version.unwrap();
         Bump::Custom(Version::from_str(&validated_version)?)
     } else {
         println!("{} No version bump argument passed!", "[ERROR]".red());
@@ -200,8 +200,7 @@ fn main() -> Result<()> {
         run_cmd(&["git", "push"], Color::Blue, flags.debug);
 
         run_cmd(&["git", "push", "--tags"], Color::Blue, flags.debug);
-    } 
-    else if !tag_check.0 {
+    } else if !tag_check.0 {
         println!("{} The tag: {} already exists in this git repository! Try using a different version bump.", "[ERROR]".red(), tag_check.1);
         std::process::exit(1);
     };
@@ -221,15 +220,15 @@ fn tag_check(t_p: &str, bump: &Bump) -> Result<(bool, String)> {
     let attempted_tag = format!("v{}", bump_version(bump, toml)?);
 
     let command = process::Command::new("git")
-    .args(&["tag", "-l"])
-    .stdout(process::Stdio::piped())
-    .stderr(process::Stdio::piped())
-    .output()
-    .unwrap();
+        .args(&["tag", "-l"])
+        .stdout(process::Stdio::piped())
+        .stderr(process::Stdio::piped())
+        .output()
+        .unwrap();
     let stdout = String::from_utf8_lossy(&command.stdout);
     let stdout: Vec<&str> = stdout.lines().collect();
     let tags: Vec<String> = stdout.into_iter().map(|l| l.to_string()).collect();
-    
+
     Ok((!tags.contains(&attempted_tag), attempted_tag))
 }
 
@@ -348,11 +347,15 @@ impl Version {
     }
 
     fn newer(&self, v: &Self) -> bool {
-        match ((self.patch < v.patch), (self.minor < v.minor), (self.major < v.major)) {
+        match (
+            (self.patch < v.patch),
+            (self.minor < v.minor),
+            (self.major < v.major),
+        ) {
             (true, _, _) => true,
             (_, true, _) => true,
             (_, _, true) => true,
-            _ => false
+            _ => false,
         }
     }
 }
