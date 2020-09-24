@@ -115,7 +115,7 @@ dependencies = [
 
 [[package]]
 name = "increment_version"
-version = "0.3.5"
+version = "0.4.0"
 dependencies = [
  "anyhow",
  "colored",
