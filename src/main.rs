@@ -66,7 +66,7 @@ fn check_for_update(current_version: &str, debug: bool) -> Result<()> {
 
     let mut input = String::new();
 
-    if current_version.newer(&most_recent_version) {
+    if !current_version.newer(&most_recent_version) && current_version == most_recent_version {
         Ok(())
     } else {
         println!(
